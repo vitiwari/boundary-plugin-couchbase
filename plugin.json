@@ -1,0 +1,110 @@
+{
+  "description" : "Collects statistical metrics from Couchbase server nodes.",
+  "icon" : "icon.png",
+  "command_lua": "boundary-meter init.lua",
+  "postExtract" : "",
+
+  "metrics" : [
+    "COUCHBASE_RAM_QUOTA_TOTAL",
+    "COUCHBASE_RAM_QUOTA_USED",
+    "COUCHBASE_CPU_USAGE_RATE",
+    "COUCHBASE_RAM_SYSTEM_TOTAL",
+    "COUCHBASE_RAM_SYSTEM_FREE",
+    "COUCHBASE_SWAP_TOTAL",
+    "COUCHBASE_SWAP_USED",
+    "COUCHBASE_OPERATIONS",
+    "COUCHBASE_DOCUMENTS_COUNT",
+    "COUCHBASE_DOCUMENTS_SIZE",
+    "COUCHBASE_DOCUMENTS_SIZE_ON_DISK",
+    "COUCHBASE_VIEWS_SIZE",
+    "COUCHBASE_VIEWS_SIZE_ON_DISK",
+    "COUCHBASE_DOCUMENTS_FRAGMENTATION",
+    "COUCHBASE_VIEWS_FRAGMENTATION",
+    "COUCHBASE_VIEWS_OPERATIONS",
+    "COUCHBASE_DISK_COMMIT_TIME",
+    "COUCHBASE_DISK_UPDATE_TIME",
+    "COUCHBASE_CAS_HITS",
+    "COUCHBASE_CAS_MISSES",
+    "COUCHBASE_DISK_FETCHES",
+    "COUCHBASE_EVICTIONS",
+    "COUCHBASE_MISSES",
+    "COUCHBASE_XDCR_OPERATIONS",
+    "COUCHBASE_REPLICATION_CHANGES_LEFT",
+    "COUCHBASE_MAJOR_FAULTS",
+    "COUCHBASE_MINOR_FAULTS",
+    "COUCHBASE_PAGE_FAULTS",
+    "COUCHBASE_ACTIVE_CONNECTIONS"
+  ],
+
+  "paramSchema": [
+    {
+      "title": "Couchbase Host",
+      "name": "serverHost",
+      "description": "The Couchbase service host (default: 'localhost').",
+      "type" : "string",
+      "default" : "localhost",
+      "required" : false
+    },
+    {
+      "title": "Couchbase Port",
+      "name": "serverPort",
+      "description": "The Couchbase service port (default: 8091).",
+      "type" : "integer",
+      "default" : 8091,
+      "required" : false
+    },
+
+    {
+      "title": "Couchbase Username",
+      "name": "serverUsername",
+      "description": "The administrative username to access the Couchbase server (default: 'admin').",
+      "type" : "string",
+      "default" : "admin",
+      "required" : false
+    },
+    {
+      "title": "Couchbase Password",
+      "name": "serverPassword",
+      "description": "The administrative password to access the Couchbase server (default: '').",
+      "type" : "password",
+      "default" : "",
+      "required" : false
+    },
+
+    {
+      "title": "Poll Retry Count",
+      "name": "pollRetryCount",
+      "description": "The number of times to retry failed HTTP requests (default: 5, infinite: 0).",
+      "type" : "integer",
+      "default" : 5,
+      "required" : false
+    },
+    {
+      "title": "Poll Retry Delay",
+      "name": "pollRetryDelay",
+      "description": "The interval (in milliseconds) to wait before retrying a failed request (default: 3000).",
+      "type" : "integer",
+      "default" : 5,
+      "required" : false
+    },
+
+    {
+      "title": "Poll Interval",
+      "name": "pollInterval",
+      "description": "How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).",
+      "type" : "integer",
+      "default" : 5000,
+      "required" : false
+    },
+
+    {
+      "title": "Advanced Metrics",
+      "name": "advancedMetrics",
+      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
+    }
+  ]
+
+}

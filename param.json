@@ -1,0 +1,14 @@
+{
+  "serverHost": "localhost",
+  "serverPort": 8091,
+
+  "serverUsername": "admin",
+  "serverPassword": "",
+
+  "pollRetryCount": 0,
+  "pollRetryDelay": 3000,
+
+  "pollInterval": 1000,
+
+  "advancedMetrics": false
+}
