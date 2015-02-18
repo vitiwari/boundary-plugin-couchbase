@@ -5,7 +5,7 @@
   "serverUsername": "admin",
   "serverPassword": "",
 
-  "pollRetryCount": 0,
+  "pollRetryCount": 3,
   "pollRetryDelay": 3000,
 
   "pollInterval": 1000,
