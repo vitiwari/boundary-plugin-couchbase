@@ -6,7 +6,7 @@
   "serverPassword": "",
 
   "pollRetryCount": 3,
-  "pollRetryDelay": 3000,
+  "pollRetryDelay": 100,
 
   "pollInterval": 1000,
 
