@@ -29,7 +29,7 @@ local _serverTarget
 
 local _serverUsername   = _parameters.serverUsername or 'admin'
 local _serverPassword   = _parameters.serverPassword or ''
-local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    5,   0, 1000)
+local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    3,   0, 1000)
 local _pollRetryDelay   = tools.fence(tonumber(_parameters.pollRetryDelay) or  100,   0, 1000 * 60 * 60)
 local _pollInterval     = tools.fence(tonumber(_parameters.pollInterval)   or 5000, 100, 1000 * 60 * 60 * 24)
 local _advancedMetrics  = _parameters.advancedMetrics == true

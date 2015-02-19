@@ -18,7 +18,7 @@ No special setup is required (except basic configuration of options).
 |Couchbase Host     |serverHost      |string   |The Couchbase service host for the node (default: 'localhost').                          |
 |Couchbase Port     |serverPort      |integer  |The Couchbase service port for the node (default: 8091).                                 |
 |Couchbase Password |serverPassword  |password |The administrative password to access the Couchbase server (default: '').                |
-|Poll Retry Count   |pollRetryCount  |integer  |The number of times to retry failed HTTP requests (default: 5, infinite: -1).            |
+|Poll Retry Count   |pollRetryCount  |integer  |The number of times to retry failed HTTP requests (default: 3).                          |
 |Poll Retry Delay   |pollRetryDelay  |integer  |The interval (in milliseconds) to wait before retrying a failed request (default: 100).  |
 |Poll Interval      |pollInterval    |integer  |How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).      |
 |Advanced Metrics   |advancedMetrics |boolean  |Produce more detailed metrics (more expensive to compile, default: false).               |
