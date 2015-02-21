@@ -8,7 +8,6 @@
 --
 local dns   = require('dns')
 local fs    = require('fs')
-local io    = require('io')
 local json  = require('json')
 local http  = require('http')
 local os    = require('os')
@@ -39,7 +38,7 @@ local _advancedMetrics  = _parameters.advancedMetrics == true
 --
 local _source =
   (type(_parameters.source) == 'string' and _parameters.source:gsub('%s+', '') ~= '' and _parameters.source) or
-   io.popen("uname -n"):read('*line')
+   os.hostname()
 
 --
 -- Get a JSON data set from the server at the given URL (includes query string)
