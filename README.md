@@ -2,7 +2,9 @@
 
 Tracks the fork rate on your server by polling the Couchbase REST API at "http://localhost:8091/" (configurable setting).
 
-### Prerequisites
+## Prerequisites
+
+### Supported OS
 
 |     OS    | Linux | Windows | SmartOS | OS X |
 |:----------|:-----:|:-------:|:-------:|:----:|
@@ -22,7 +24,10 @@ To get the new meter:
     chmod +x setup_meter.sh
     ./setup_meter.sh
 
-- A working (and *configured*) **Couchbase** server running on the same machine (reachable at `127.0.0.1:8091`).
+#### Couchbase Server
+
+- A working server
+- Configured to run on the same machine (reachable at `127.0.0.1:8091`)
 
 ### Plugin Setup
 
