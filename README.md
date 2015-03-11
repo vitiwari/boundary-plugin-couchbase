@@ -2,17 +2,26 @@
 
 Tracks the fork rate on your server by polling the Couchbase REST API at "http://localhost:8091/" (configurable setting).
 
-## Prerequisites
+### Prerequisites
+
+|     OS    | Linux | Windows | SmartOS | OS X |
+|:----------|:-----:|:-------:|:-------:|:----:|
+| Supported |   v   |    v    |    v    |  v   |
+
+- Written in pure Lua/Luvit (embedded in `boundary-meter`) therefore **no dependencies** are required.
+- Metrics are collected via HTTP requests, therefore **all OSes** should work (tested on **Debian-based Linux** distributions).
+
+#### Boundary Meter Versions V4.0 Or Greater REQUIRED
+(to get the new meter - curl -fsS -d '{"token":"api.<Your API Token Here>"}' -H 'Content-Type: application/json' https://meter.boundary.com/setup_meter > setup_meter.sh && chmod +x setup_meter.sh && ./setup_meter.sh)
 
 - A working (and *configured*) **Couchbase** server running on the same machine (reachable at `127.0.0.1:8091`).
-- Metrics are collected via HTTP requests, therefore **all OSes** should work (tested on **Debian-based Linux** distributions).
-- Written in pure Lua/Luvit (embedded in `boundary-meter`) therefore **no dependencies** are required.
 
-## Plugin Setup
+### Plugin Setup
 
 No special setup is required (except basic configuration of options).
 
-## Configurable Setings
+#### Plugin Configuration Fields
+
 |Setting Name       |Identifier      |Type     |Description                                                                              |
 |:------------------|----------------|---------|:----------------------------------------------------------------------------------------|
 |Couchbase Host     |serverHost      |string   |The Couchbase service host for the node (default: 'localhost').                          |
@@ -23,11 +32,12 @@ No special setup is required (except basic configuration of options).
 |Poll Interval      |pollInterval    |integer  |How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).      |
 |Advanced Metrics   |advancedMetrics |boolean  |Produce more detailed metrics (more expensive to compile, default: false).               |
 
-## Collected Metrics
+### Metrics Collected
 
 For advanced metrics please set a longer polling interval to minimize load on the Couchbase instance (e.g. 5000ms or more).
 
-### Standard Metrics
+#### Standard Metrics
+
 |Metric Name                         |Description                                                                                        |
 |:-----------------------------------|:--------------------------------------------------------------------------------------------------|
 |COUCHBASE_RAM_QUOTA_TOTAL           |Total quota of memory allocated by the Couchbase cluster for this node.                            |
@@ -44,7 +54,8 @@ For advanced metrics please set a longer polling interval to minimize load on th
 |COUCHBASE_VIEWS_SIZE                |Size of the data in the indexed views on this node.                                                |
 |COUCHBASE_VIEWS_SIZE_ON_DISK        |Size on disk of the indexed views on this node.                                                    |
 
-### Advanced Metrics (more expensive retrieval)
+#### Advanced Metrics (more expensive retrieval)
+
 |Metric Name                         |Description                                                                                        |
 |:-----------------------------------|:--------------------------------------------------------------------------------------------------|
 |COUCHBASE_DOCUMENTS_FRAGMENTATION   |Rate of fragmentation of document data.                                                            |
