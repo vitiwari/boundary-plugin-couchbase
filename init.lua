@@ -8,7 +8,6 @@
 --
 local dns   = require('dns')
 local fs    = require('fs')
-local io    = require('io')
 local json  = require('json')
 local http  = require('http')
 local os    = require('os')
@@ -29,8 +28,8 @@ local _serverTarget
 
 local _serverUsername   = _parameters.serverUsername or 'admin'
 local _serverPassword   = _parameters.serverPassword or ''
-local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    5,   0, 1000)
-local _pollRetryDelay   = tools.fence(tonumber(_parameters.pollRetryDelay) or 3000,   0, 1000 * 60 * 60)
+local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    3,   0, 1000)
+local _pollRetryDelay   = tools.fence(tonumber(_parameters.pollRetryDelay) or  100,   0, 1000 * 60 * 60)
 local _pollInterval     = tools.fence(tonumber(_parameters.pollInterval)   or 5000, 100, 1000 * 60 * 60 * 24)
 local _advancedMetrics  = _parameters.advancedMetrics == true
 
@@ -39,7 +38,7 @@ local _advancedMetrics  = _parameters.advancedMetrics == true
 --
 local _source =
   (type(_parameters.source) == 'string' and _parameters.source:gsub('%s+', '') ~= '' and _parameters.source) or
-   io.popen("uname -n"):read('*line')
+   os.hostname()
 
 --
 -- Get a JSON data set from the server at the given URL (includes query string)
