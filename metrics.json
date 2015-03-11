@@ -6,7 +6,9 @@
       "description": "Total quota of memory allocated by the Couchbase cluster for this node.",
       "unit": "bytecount",
       "displayNameShort": "CB Quota RAM",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_RAM_QUOTA_USED",
@@ -14,7 +16,9 @@
       "description": "Amount of memory used on this node by Couchbase from the allocated quota.",
       "unit": "bytecount",
       "displayNameShort": "CB Quota RAM Used",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_CPU_USAGE_RATE",
@@ -22,7 +26,9 @@
       "description": "CPU utilization percent.",
       "unit": "percent",
       "displayNameShort": "CB CPU Usage",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_RAM_SYSTEM_TOTAL",
@@ -30,7 +36,9 @@
       "description": "Total amount of memory on this node as reported by Couchbase.",
       "unit": "bytecount",
       "displayNameShort": "CB System RAM",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_RAM_SYSTEM_FREE",
@@ -38,7 +46,9 @@
       "description": "Amount of memory used on this node as reported by Couchbase.",
       "unit": "bytecount",
       "displayNameShort": "CB System RAM Free",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_SWAP_TOTAL",
@@ -46,7 +56,9 @@
       "description": "Total swap space on this node as reported by Couchbase.",
       "unit": "bytecount",
       "displayNameShort": "CB SWAP Total",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_SWAP_USED",
@@ -54,7 +66,9 @@
       "description": "Used swap space on this node as reported by Couchbase.",
       "unit": "bytecount",
       "displayNameShort": "CB SWAP Used",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_OPERATIONS",
@@ -62,7 +76,9 @@
       "description": "Number of currently on-going operations on this node.",
       "unit": "number",
       "displayNameShort": "CB Ops",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DOCUMENTS_COUNT",
@@ -70,7 +86,9 @@
       "description": "Number of documents stored on this node.",
       "unit": "number",
       "displayNameShort": "CB DOC Count",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DOCUMENTS_SIZE",
@@ -78,7 +96,9 @@
       "description": "Size of the data in the documents stored on this node.",
       "unit": "bytecount",
       "displayNameShort": "CB DOC Size",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DOCUMENTS_SIZE_ON_DISK",
@@ -86,7 +106,9 @@
       "description": "Size on disk of the documents stored on this node.",
       "unit": "bytecount",
       "displayNameShort": "CB DOC Disk Size",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_VIEWS_SIZE",
@@ -94,7 +116,9 @@
       "description": "Size of the data in the indexed views on this node.",
       "unit": "bytecount",
       "displayNameShort": "CB VIEW Size",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_VIEWS_SIZE_ON_DISK",
@@ -102,7 +126,9 @@
       "description": "Size on disk of the indexed views on this node.",
       "unit": "bytecount",
       "displayNameShort": "CB VIEW Disk Size",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DOCUMENTS_FRAGMENTATION",
@@ -110,7 +136,9 @@
       "description": "Rate of fragmentation of document data.",
       "unit": "percent",
       "displayNameShort": "CB DOC Frag",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_VIEWS_FRAGMENTATION",
@@ -118,7 +146,9 @@
       "description": "Rate of fragmentation of views data (i.e. indexes).",
       "unit": "percent",
       "displayNameShort": "CB VIEW Frag",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_VIEWS_OPERATIONS",
@@ -126,7 +156,9 @@
       "description": "Number of currently on-going views-related operations on this node (e.g. queries).",
       "unit": "number",
       "displayNameShort": "CB VIEW Ops",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DISK_COMMIT_TIME",
@@ -134,7 +166,9 @@
       "description": "Average time for disk commit operations on this node.",
       "unit": "duration",
       "displayNameShort": "CB DISK Commit",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DISK_UPDATE_TIME",
@@ -142,7 +176,9 @@
       "description": "Average time for disk update operations on this node.",
       "unit": "duration",
       "displayNameShort": "CB DISK Update",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_CAS_HITS",
@@ -150,7 +186,9 @@
       "description": "Number of successful CAS comparisons.",
       "unit": "number",
       "displayNameShort": "CB CAS Hit",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_CAS_MISSES",
@@ -158,7 +196,9 @@
       "description": "Number of unsuccessful CAS comparisons.",
       "unit": "number",
       "displayNameShort": "CB CAS Miss",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_DISK_FETCHES",
@@ -166,7 +206,9 @@
       "description": "Number of times Couchbase went to disk to get data (non-resident data) per second.",
       "unit": "number",
       "displayNameShort": "CB DISK Fetch",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_EVICTIONS",
@@ -174,7 +216,9 @@
       "description": "Number of times COuchbase evicted data from the resident memory to free-up space.",
       "unit": "number",
       "displayNameShort": "CB Evict",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_MISSES",
@@ -182,7 +226,9 @@
       "description": "Number of operations on missing documents.",
       "unit": "number",
       "displayNameShort": "CB DOC Miss",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_XDCR_OPERATIONS",
@@ -190,7 +236,9 @@
       "description": "Cross-datacenter replication operations on this node.",
       "unit": "number",
       "displayNameShort": "CB XDCR Ops",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_REPLICATION_CHANGES_LEFT",
@@ -198,7 +246,9 @@
       "description": "Number of replication operations queued and yet to be performed.",
       "unit": "number",
       "displayNameShort": "CB REPL Left",
-      "defaultAggregate": "avg"
+      "defaultAggregate": "avg",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_MAJOR_FAULTS",
@@ -206,7 +256,9 @@
       "description": "Number of major faults on this node.",
       "unit": "number",
       "displayNameShort": "CB FAULT Maj",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_MINOR_FAULTS",
@@ -214,7 +266,9 @@
       "description": "Number of minor faults on this node.",
       "unit": "number",
       "displayNameShort": "CB FAULT Min",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_PAGE_FAULTS",
@@ -222,7 +276,9 @@
       "description": "Number of memory page faults on this node.",
       "unit": "number",
       "displayNameShort": "CB FAULT Page",
-      "defaultAggregate": "sum"
+      "defaultAggregate": "sum",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     },
     {
       "name": "COUCHBASE_ACTIVE_CONNECTIONS",
@@ -230,7 +286,9 @@
       "description": "Number of currently active connections established with this node.",
       "unit": "number",
       "displayNameShort": "CB Conn",
-      "defaultAggregate": "max"
+      "defaultAggregate": "max",
+      "defaultResolutionMS": 1000,
+      "isDisabled": false
     }
   ]
 }
