@@ -35,6 +35,8 @@ No special setup is required (except basic configuration of options).
 
 #### Plugin Configuration Fields
 
+For advanced metrics please set a longer polling interval to minimize load on the Couchbase instance (e.g. 5000ms or more).
+
 |Setting Name       |Identifier      |Type     |Description                                                                              |
 |:------------------|----------------|---------|:----------------------------------------------------------------------------------------|
 |Couchbase Host     |serverHost      |string   |The Couchbase service host for the node (default: 'localhost').                          |
@@ -46,8 +48,6 @@ No special setup is required (except basic configuration of options).
 |Advanced Metrics   |advancedMetrics |boolean  |Produce more detailed metrics (more expensive to compile, default: false).               |
 
 ### Metrics Collected
-
-For advanced metrics please set a longer polling interval to minimize load on the Couchbase instance (e.g. 5000ms or more).
 
 #### Standard Metrics
 
