@@ -1,294 +1,234 @@
 {
-  "result": [
-    {
-      "name": "COUCHBASE_RAM_QUOTA_TOTAL",
-      "displayName": "Couchbase Total RAM Quota",
-      "description": "Total quota of memory allocated by the Couchbase cluster for this node.",
-      "unit": "bytecount",
-      "displayNameShort": "CB Quota RAM",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_RAM_QUOTA_USED",
-      "displayName": "Couchbase Used RAM Quota",
-      "description": "Amount of memory used on this node by Couchbase from the allocated quota.",
-      "unit": "bytecount",
-      "displayNameShort": "CB Quota RAM Used",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_CPU_USAGE_RATE",
-      "displayName": "Couchbase CPU Usage Rate",
-      "description": "CPU utilization percent.",
-      "unit": "percent",
-      "displayNameShort": "CB CPU Usage",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_RAM_SYSTEM_TOTAL",
-      "displayName": "Couchbase Total RAM on System",
-      "description": "Total amount of memory on this node as reported by Couchbase.",
-      "unit": "bytecount",
-      "displayNameShort": "CB System RAM",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_RAM_SYSTEM_FREE",
-      "displayName": "Couchbase Available RAM on System",
-      "description": "Amount of memory used on this node as reported by Couchbase.",
-      "unit": "bytecount",
-      "displayNameShort": "CB System RAM Free",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_SWAP_TOTAL",
-      "displayName": "Couchbase Available Swap on System",
-      "description": "Total swap space on this node as reported by Couchbase.",
-      "unit": "bytecount",
-      "displayNameShort": "CB SWAP Total",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_SWAP_USED",
-      "displayName": "Couchbase Used Swap on System",
-      "description": "Used swap space on this node as reported by Couchbase.",
-      "unit": "bytecount",
-      "displayNameShort": "CB SWAP Used",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_OPERATIONS",
-      "displayName": "Couchbase Operations",
-      "description": "Number of currently on-going operations on this node.",
-      "unit": "number",
-      "displayNameShort": "CB Ops",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DOCUMENTS_COUNT",
-      "displayName": "Couchbase Documents Count",
-      "description": "Number of documents stored on this node.",
-      "unit": "number",
-      "displayNameShort": "CB DOC Count",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DOCUMENTS_SIZE",
-      "displayName": "Couchbase Documents Size",
-      "description": "Size of the data in the documents stored on this node.",
-      "unit": "bytecount",
-      "displayNameShort": "CB DOC Size",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DOCUMENTS_SIZE_ON_DISK",
-      "displayName": "Couchbase Documents Size-on-Disk",
-      "description": "Size on disk of the documents stored on this node.",
-      "unit": "bytecount",
-      "displayNameShort": "CB DOC Disk Size",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_VIEWS_SIZE",
-      "displayName": "Couchbase Views Size",
-      "description": "Size of the data in the indexed views on this node.",
-      "unit": "bytecount",
-      "displayNameShort": "CB VIEW Size",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_VIEWS_SIZE_ON_DISK",
-      "displayName": "Couchbase Views Size-on-Disk",
-      "description": "Size on disk of the indexed views on this node.",
-      "unit": "bytecount",
-      "displayNameShort": "CB VIEW Disk Size",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DOCUMENTS_FRAGMENTATION",
-      "displayName": "Couchbase Documents Fragmentation",
-      "description": "Rate of fragmentation of document data.",
-      "unit": "percent",
-      "displayNameShort": "CB DOC Frag",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_VIEWS_FRAGMENTATION",
-      "displayName": "Couchbase Views Fragmentation",
-      "description": "Rate of fragmentation of views data (i.e. indexes).",
-      "unit": "percent",
-      "displayNameShort": "CB VIEW Frag",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_VIEWS_OPERATIONS",
-      "displayName": "Couchbase Views Operations",
-      "description": "Number of currently on-going views-related operations on this node (e.g. queries).",
-      "unit": "number",
-      "displayNameShort": "CB VIEW Ops",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DISK_COMMIT_TIME",
-      "displayName": "Couchbase Disk Commit Time",
-      "description": "Average time for disk commit operations on this node.",
-      "unit": "duration",
-      "displayNameShort": "CB DISK Commit",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DISK_UPDATE_TIME",
-      "displayName": "Couchbase Disk Update Time",
-      "description": "Average time for disk update operations on this node.",
-      "unit": "duration",
-      "displayNameShort": "CB DISK Update",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_CAS_HITS",
-      "displayName": "Couchbase CAS Hits",
-      "description": "Number of successful CAS comparisons.",
-      "unit": "number",
-      "displayNameShort": "CB CAS Hit",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_CAS_MISSES",
-      "displayName": "Couchbase CAS Misses",
-      "description": "Number of unsuccessful CAS comparisons.",
-      "unit": "number",
-      "displayNameShort": "CB CAS Miss",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_DISK_FETCHES",
-      "displayName": "Couchbase DIsk Fetches",
-      "description": "Number of times Couchbase went to disk to get data (non-resident data) per second.",
-      "unit": "number",
-      "displayNameShort": "CB DISK Fetch",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_EVICTIONS",
-      "displayName": "Couchbase Evictions",
-      "description": "Number of times COuchbase evicted data from the resident memory to free-up space.",
-      "unit": "number",
-      "displayNameShort": "CB Evict",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_MISSES",
-      "displayName": "Couchbase Misses",
-      "description": "Number of operations on missing documents.",
-      "unit": "number",
-      "displayNameShort": "CB DOC Miss",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_XDCR_OPERATIONS",
-      "displayName": "Couchbase XDCR Operations",
-      "description": "Cross-datacenter replication operations on this node.",
-      "unit": "number",
-      "displayNameShort": "CB XDCR Ops",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_REPLICATION_CHANGES_LEFT",
-      "displayName": "Couchbase Replication Changes Remaining",
-      "description": "Number of replication operations queued and yet to be performed.",
-      "unit": "number",
-      "displayNameShort": "CB REPL Left",
-      "defaultAggregate": "avg",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_MAJOR_FAULTS",
-      "displayName": "Couchbase Major Faults",
-      "description": "Number of major faults on this node.",
-      "unit": "number",
-      "displayNameShort": "CB FAULT Maj",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_MINOR_FAULTS",
-      "displayName": "Couchbase Minor Faults",
-      "description": "Number of minor faults on this node.",
-      "unit": "number",
-      "displayNameShort": "CB FAULT Min",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_PAGE_FAULTS",
-      "displayName": "Couchbase Page Faults",
-      "description": "Number of memory page faults on this node.",
-      "unit": "number",
-      "displayNameShort": "CB FAULT Page",
-      "defaultAggregate": "sum",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    },
-    {
-      "name": "COUCHBASE_ACTIVE_CONNECTIONS",
-      "displayName": "Couchbase Active Connections",
-      "description": "Number of currently active connections established with this node.",
-      "unit": "number",
-      "displayNameShort": "CB Conn",
-      "defaultAggregate": "max",
-      "defaultResolutionMS": 1000,
-      "isDisabled": false
-    }
-  ]
+  "COUCHBASE_ACTIVE_CONNECTIONS": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Number of currently active connections established with this node.",
+    "displayName": "Couchbase Active Connections",
+    "displayNameShort": "CB Conn",
+    "unit": "number"
+  },
+  "COUCHBASE_CAS_HITS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of successful CAS comparisons.",
+    "displayName": "Couchbase CAS Hits",
+    "displayNameShort": "CB CAS Hit",
+    "unit": "number"
+  },
+  "COUCHBASE_CAS_MISSES": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of unsuccessful CAS comparisons.",
+    "displayName": "Couchbase CAS Misses",
+    "displayNameShort": "CB CAS Miss",
+    "unit": "number"
+  },
+  "COUCHBASE_CPU_USAGE_RATE": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "CPU utilization percent.",
+    "displayName": "Couchbase CPU Usage Rate",
+    "displayNameShort": "CB CPU Usage",
+    "unit": "percent"
+  },
+  "COUCHBASE_DISK_COMMIT_TIME": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Average time for disk commit operations on this node.",
+    "displayName": "Couchbase Disk Commit Time",
+    "displayNameShort": "CB DISK Commit",
+    "unit": "duration"
+  },
+  "COUCHBASE_DISK_FETCHES": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of times Couchbase went to disk to get data (non-resident data) per second.",
+    "displayName": "Couchbase DIsk Fetches",
+    "displayNameShort": "CB DISK Fetch",
+    "unit": "number"
+  },
+  "COUCHBASE_DISK_UPDATE_TIME": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Average time for disk update operations on this node.",
+    "displayName": "Couchbase Disk Update Time",
+    "displayNameShort": "CB DISK Update",
+    "unit": "duration"
+  },
+  "COUCHBASE_DOCUMENTS_COUNT": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Number of documents stored on this node.",
+    "displayName": "Couchbase Documents Count",
+    "displayNameShort": "CB DOC Count",
+    "unit": "number"
+  },
+  "COUCHBASE_DOCUMENTS_FRAGMENTATION": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Rate of fragmentation of document data.",
+    "displayName": "Couchbase Documents Fragmentation",
+    "displayNameShort": "CB DOC Frag",
+    "unit": "percent"
+  },
+  "COUCHBASE_DOCUMENTS_SIZE": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Size of the data in the documents stored on this node.",
+    "displayName": "Couchbase Documents Size",
+    "displayNameShort": "CB DOC Size",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_DOCUMENTS_SIZE_ON_DISK": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Size on disk of the documents stored on this node.",
+    "displayName": "Couchbase Documents Size-on-Disk",
+    "displayNameShort": "CB DOC Disk Size",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_EVICTIONS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of times COuchbase evicted data from the resident memory to free-up space.",
+    "displayName": "Couchbase Evictions",
+    "displayNameShort": "CB Evict",
+    "unit": "number"
+  },
+  "COUCHBASE_MAJOR_FAULTS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of major faults on this node.",
+    "displayName": "Couchbase Major Faults",
+    "displayNameShort": "CB FAULT Maj",
+    "unit": "number"
+  },
+  "COUCHBASE_MINOR_FAULTS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of minor faults on this node.",
+    "displayName": "Couchbase Minor Faults",
+    "displayNameShort": "CB FAULT Min",
+    "unit": "number"
+  },
+  "COUCHBASE_MISSES": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of operations on missing documents.",
+    "displayName": "Couchbase Misses",
+    "displayNameShort": "CB DOC Miss",
+    "unit": "number"
+  },
+  "COUCHBASE_OPERATIONS": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Number of currently on-going operations on this node.",
+    "displayName": "Couchbase Operations",
+    "displayNameShort": "CB Ops",
+    "unit": "number"
+  },
+  "COUCHBASE_PAGE_FAULTS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Number of memory page faults on this node.",
+    "displayName": "Couchbase Page Faults",
+    "displayNameShort": "CB FAULT Page",
+    "unit": "number"
+  },
+  "COUCHBASE_RAM_QUOTA_TOTAL": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Total quota of memory allocated by the Couchbase cluster for this node.",
+    "displayName": "Couchbase Total RAM Quota",
+    "displayNameShort": "CB Quota RAM",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_RAM_QUOTA_USED": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Amount of memory used on this node by Couchbase from the allocated quota.",
+    "displayName": "Couchbase Used RAM Quota",
+    "displayNameShort": "CB Quota RAM Used",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_RAM_SYSTEM_FREE": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Amount of memory used on this node as reported by Couchbase.",
+    "displayName": "Couchbase Available RAM on System",
+    "displayNameShort": "CB System RAM Free",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_RAM_SYSTEM_TOTAL": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Total amount of memory on this node as reported by Couchbase.",
+    "displayName": "Couchbase Total RAM on System",
+    "displayNameShort": "CB System RAM",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_REPLICATION_CHANGES_LEFT": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Number of replication operations queued and yet to be performed.",
+    "displayName": "Couchbase Replication Changes Remaining",
+    "displayNameShort": "CB REPL Left",
+    "unit": "number"
+  },
+  "COUCHBASE_SWAP_TOTAL": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Total swap space on this node as reported by Couchbase.",
+    "displayName": "Couchbase Available Swap on System",
+    "displayNameShort": "CB SWAP Total",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_SWAP_USED": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Used swap space on this node as reported by Couchbase.",
+    "displayName": "Couchbase Used Swap on System",
+    "displayNameShort": "CB SWAP Used",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_VIEWS_FRAGMENTATION": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Rate of fragmentation of views data (i.e. indexes).",
+    "displayName": "Couchbase Views Fragmentation",
+    "displayNameShort": "CB VIEW Frag",
+    "unit": "percent"
+  },
+  "COUCHBASE_VIEWS_OPERATIONS": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Number of currently on-going views-related operations on this node (e.g. queries).",
+    "displayName": "Couchbase Views Operations",
+    "displayNameShort": "CB VIEW Ops",
+    "unit": "number"
+  },
+  "COUCHBASE_VIEWS_SIZE": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Size of the data in the indexed views on this node.",
+    "displayName": "Couchbase Views Size",
+    "displayNameShort": "CB VIEW Size",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_VIEWS_SIZE_ON_DISK": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Size on disk of the indexed views on this node.",
+    "displayName": "Couchbase Views Size-on-Disk",
+    "displayNameShort": "CB VIEW Disk Size",
+    "unit": "bytecount"
+  },
+  "COUCHBASE_XDCR_OPERATIONS": {
+    "defaultAggregate": "sum",
+    "defaultResolutionMS": 1000,
+    "description": "Cross-datacenter replication operations on this node.",
+    "displayName": "Couchbase XDCR Operations",
+    "displayNameShort": "CB XDCR Ops",
+    "unit": "number"
+  }
 }
