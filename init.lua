@@ -1,147 +1,102 @@
+-- Copyright 2015 Boundary, Inc.
 --
--- [boundary.com] Couchbase Lua Plugin
--- [author] Valeriu Paloş <me@vpalos.com>
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
 --
-
+--    http://www.apache.org/licenses/LICENSE-2.0
 --
--- Imports.
---
-local dns   = require('dns')
-local fs    = require('fs')
-local json  = require('json')
-local http  = require('http')
-local os    = require('os')
-local timer = require('timer')
-local tools = require('tools')
-local url   = require('url')
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 
---
--- Initialize.
---
-local _buckets          = {}
-local _parameters       = json.parse(fs.readFileSync('param.json')) or {}
+local framework = require('framework')
+local json = require('json')
+local dns = require('dns')
+local Plugin = framework.Plugin 
+local WebRequestDataSource = framework.WebRequestDataSource
+local notEmpty = framework.string.notEmpty
+local auth = framework.util.auth
 
-local _serverHost       = _parameters.serverHost or 'localhost'
-local _serverPort       = _parameters.serverPort or 8091
-local _serverAddress
-local _serverTarget
+local params = framework.params
+params.name = 'Boundary Plugin Couchbase'
+params.version = '2.0'
+params.tags = 'couchbase'
+params.pollInterval = notEmpty(tonumber(params.pollInterval), 1000)
+params.host = notEmpty(params.host, 'localhost')
+params.port = notEmpty(params.port, '8091')
+params.advanced_metrics = params.advanced_metrics or false
 
-local _serverUsername   = _parameters.serverUsername or 'admin'
-local _serverPassword   = _parameters.serverPassword or ''
-local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    3,   0, 1000)
-local _pollRetryDelay   = tools.fence(tonumber(_parameters.pollRetryDelay) or  100,   0, 1000 * 60 * 60)
-local _pollInterval     = tools.fence(tonumber(_parameters.pollInterval)   or 5000, 100, 1000 * 60 * 60 * 24)
-local _advancedMetrics  = _parameters.advancedMetrics == true
+local options = {}
+options.host = params.host
+options.port = params.port
+options.auth = auth(params.username, params.password)
+options.path = '/pools/nodes'
+--options.path = '/pools/default/buckets'
+options.wait_for_end = true
+local ds = WebRequestDataSource:new(options)
 
---
--- Metrics source.
---
-local _source =
-  (type(_parameters.source) == 'string' and _parameters.source:gsub('%s+', '') ~= '' and _parameters.source) or
-   os.hostname()
-
---
--- Get a JSON data set from the server at the given URL (includes query string)
---
-function retrieve(location, callback)
-  local _pollRetryRemaining = _pollRetryCount
-
-  local options = url.parse('http://' .. _serverTarget .. location)
-  options.headers = {
-    ['Accept'] = 'application/json',
-    ['Authorization'] = 'Basic ' .. tools.base64(_serverUsername .. ':' .. _serverPassword)
-  }
-
-  function handler(response)
-    if (response.status_code ~= 200) then
-      return retry("Unexpected status code " .. response.status_code .. ", should be 200!")
-    end
-
-    local data = {}
-    response:on('data', function(chunk)
-      table.insert(data, chunk)
-    end)
-    response:on('end', function()
-      local success, json = pcall(json.parse, table.concat(data))
-
-      if success then
-        callback(nil, json)
-      else
-        callback("Unable to parse incoming data as a valid JSON value!")
-      end
-
-      response:destroy()
-    end)
-
-    response:once('error', retry)
-  end
-
-  function retry(result)
-    if _pollRetryRemaining == 0 then
-      return callback(result)
-    elseif _pollRetryRemaining > 0 then
-      _pollRetryRemaining = _pollRetryRemaining - 1
-    end
-    timer.setTimeout(_pollRetryDelay, perform)
-  end
-
-  function perform()
-    local request = http.request(options, handler)
-    request:once('error', retry)
-    request:done()
-  end
-
-  perform()
-end
-
---
--- Schedule poll.
---
-function schedule()
-  timer.setTimeout(_pollInterval, poll)
-end
-
---
--- Print a metric.
---
-function metric(stamp, id, value)
-  print(string.format('%s %s %s %d', id, value, _source, stamp))
-end
-
---
--- Compile and print standard metrics from given data.
---
-function produceStandard(stamp, cluster, buckets)
-  metric(stamp, 'COUCHBASE_RAM_QUOTA_TOTAL',          cluster.storageTotals.ram.quotaTotalPerNode or 0)
-  metric(stamp, 'COUCHBASE_RAM_QUOTA_USED',           cluster.storageTotals.ram.quotaUsedPerNode or 0)
-
-  local selectedNode
-  for _, node in ipairs(cluster.nodes) do
-    if node.hostname == _serverTarget then
-      selectedNode = node
-      break
+local function getNode(nodes, hostname)
+  for _, node in ipairs(nodes) do
+    if node.hostname == hostname then
+      return node
     end
   end
-
-  if selectedNode then
-    metric(stamp, 'COUCHBASE_CPU_USAGE_RATE',         selectedNode.systemStats.cpu_utilization_rate or 0)
-    metric(stamp, 'COUCHBASE_RAM_SYSTEM_TOTAL',       selectedNode.systemStats.mem_total or 0)
-    metric(stamp, 'COUCHBASE_RAM_SYSTEM_FREE',        selectedNode.systemStats.mem_free or 0)
-    metric(stamp, 'COUCHBASE_SWAP_TOTAL',             selectedNode.systemStats.swap_total or 0)
-    metric(stamp, 'COUCHBASE_SWAP_USED',              selectedNode.systemStats.swap_used or 0)
-    metric(stamp, 'COUCHBASE_OPERATIONS',             selectedNode.interestingStats.ops or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_COUNT',        selectedNode.interestingStats.curr_items or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_SIZE',         selectedNode.interestingStats.couch_docs_data_size or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_SIZE_ON_DISK', selectedNode.interestingStats.couch_docs_actual_disk_size or 0)
-    metric(stamp, 'COUCHBASE_VIEWS_SIZE',             selectedNode.interestingStats.couch_views_data_size or 0)
-    metric(stamp, 'COUCHBASE_VIEWS_SIZE_ON_DISK',     selectedNode.interestingStats.couch_views_actual_disk_size or 0)
-  end
 end
 
+-- 1. get /pools/nodes
+-- 2. get /pools/default/buckets for a list of available buckets and save bucket.name
+-- 3. get /pools/default/buckets/%s/nodes/%s/stats?zoom=minute for each bucket if advanced metrics is enabled.
+
+local target
+local plugin = Plugin:new(params, ds)
+function plugin:onParseValues(data, extra)
+  local cluster = json.parse(data)
+  local result = {}
+
+  result['COUCHBASE_RAM_QUOTA_TOTAL'] = cluster.storageTotals.ram.quotaTotalPerNode or 0
+  result['COUCHBASE_RAM_QUOTA_USED'] = cluster.storageTotals.ram.quotaUsedPerNode or 0
+  
+  local node = getNode(cluster.nodes, target)
+  if node then
+    result['COUCHBASE_CPU_USAGE_RATE'] = node.systemStats.cpu_utilization_rate or 0
+    result['COUCHBASE_RAM_SYSTEM_TOTAL'] = node.systemStats.mem_free or 0
+    result['COUCHBASE_RAM_SYSTEM_FREE'] = node.systemStats.mem_total or 0
+    result['COUCHBASE_SWAP_TOTAL'] = node.systemStats.swap_total or 0
+    result['COUCHBASE_SWAP_USED'] = node.systemStats.swap_used or 0
+    result['COUCHBASE_OPERATIONS'] = node.interestingStats.ops or 0
+    result['COUCHBASE_DOCUMENTS_COUNT'] = node.interestingStats.curr_items or 0
+    result['COUCHBASE_DOCUMENTS_SIZE'] = node.interestingStats.couch_docs_data_size or 0
+    result['COUCHBASE_DOCUMENTS_SIZE_ON_DISK'] = node.interestingStats.couch_docs_actual_disk_size or 0
+    result['COUCHBASE_VIEWS_SIZE'] = node.interestingStats.couch_views_data_size or 0
+    result['COUCHBASE_VIEWS_SIZE_ON_DISK'] = node.interestingStats.couch_views_actual_disk_size or 0
+  end
+  
+  -- Standard metrics
+   return result
+end
+
+local function init(host)
+  dns.resolve(host, function (failure, addresses)
+    if failure then
+      -- TODO: Emit critical event
+      return
+    end
+
+    target = addresses[1] .. ':' .. params.port 
+    plugin:run()
+  end)
+end
+
+init(params.host)
+
+--[[
 --
 -- Compile and print advanced metrics from given data.
 --
-function produceAdvanced(stamp, cluster, buckets)
+local function produceAdvanced(stamp, cluster, buckets)
   function coalesce(sample)
     local result = 0
     for _, bucket in pairs(buckets) do
@@ -175,7 +130,7 @@ end
 --
 -- Produce metrics.
 --
-function poll()
+local function poll()
 
   local stamp   = os.time()
   local cluster
@@ -210,7 +165,6 @@ function poll()
     produce()
   end)
 
-  if _advancedMetrics then
     for _, bucket in ipairs(_buckets) do
 
       retrieve(string.format('/pools/default/buckets/%s/nodes/%s/stats?zoom=minute', bucket, _serverTarget), function(failure, data)
@@ -227,38 +181,4 @@ function poll()
     end
   end
 
-end
-
---
--- Query Couchbase for buckets.
---
-function scan()
-  retrieve('/pools/default/buckets', function(failure, buckets)
-    if failure then
-      error("Failed to read Couchbase infrastructure: " .. tostring(failure) .. "!")
-    end
-
-    for _, bucket in ipairs(buckets) do
-      table.insert(_buckets, bucket.name)
-    end
-
-    -- Trigger repetitive collection.
-    poll()
-  end)
-end
-
---
--- Resolve server DNS into IP form and trigger cluster scan (which triggers polling).
---
-dns.resolve(_serverHost, function(failure, addresses)
-  if failure then
-    error(string.format("Unable to resolve server hostname '%s': %s!", _serverHost, failure))
-  end
-
-  -- Compile target.
-  _serverAddress = addresses[1]
-  _serverTarget = _serverAddress .. ':' .. _serverPort
-
-  -- Trigger cluster scan.
-  scan()
-end)
+end]]
