@@ -1,4 +1,4 @@
-# Boundary Couchbase Plugin (pure Lua/Luvit)
+# Boundary Couchbase Plugin
 
 Tracks the fork rate on your server by polling the Couchbase REST API at "http://localhost:8091/" (configurable setting).
 
@@ -35,7 +35,7 @@ For advanced metrics please set a longer polling interval to minimize load on th
 | Port              | The Couchbase service port for the node (default: 8091).                                 |
 | Username          | The administrative username to access the Couchbase server |
 | Password          | The administrative password to access the Couchbase server (default: '').                |
-| Poll Interval     | How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).      |
+| Poll Interval     | How often (in milliseconds) to poll the Couchbase node for metrics.      |
 | Advanced Metrics  | Produce more detailed metrics (more expensive to compile, default: false).               |
 
 ### Metrics Collected
