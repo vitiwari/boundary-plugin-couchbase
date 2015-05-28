@@ -3,6 +3,6 @@
   "port": 8091,
   "username": "Administrator",
   "password": "123456",
-  "pollInterval": 1000,
-  "advanced_metrics": false
+  "pollInterval": 5000,
+  "advanced_metrics": true
 }
