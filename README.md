@@ -81,6 +81,9 @@ For advanced metrics please set a longer polling interval to minimize load on th
 
 ### Dashboards
 
+- Couchbase Summary
+- Couchbae Advanced Metrics
+
 ### References
 
 [Couchbase REST API Reference](http://docs.couchbase.com/admin/admin/rest-intro.html)
