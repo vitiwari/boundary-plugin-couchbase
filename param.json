@@ -1,14 +1,8 @@
 {
-  "serverHost": "localhost",
-  "serverPort": 8091,
-
-  "serverUsername": "admin",
-  "serverPassword": "",
-
-  "pollRetryCount": 3,
-  "pollRetryDelay": 100,
-
-  "pollInterval": 1000,
-
-  "advancedMetrics": false
+  "host": "localhost",
+  "port": 8091,
+  "username": "Administrator",
+  "password": "123456",
+  "pollInterval": 5000,
+  "advanced_metrics": true
 }

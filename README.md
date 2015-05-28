@@ -1,10 +1,10 @@
-# Boundary Couchbase Plugin (pure Lua/Luvit)
+# Boundary Couchbase Plugin
 
 Tracks the fork rate on your server by polling the Couchbase REST API at "http://localhost:8091/" (configurable setting).
 
-## Prerequisites
+### Prerequisites
 
-### Supported OS
+#### Supported OS
 
 |     OS    | Linux | Windows | SmartOS | OS X |
 |:----------|:-----:|:-------:|:-------:|:----:|
@@ -13,39 +13,30 @@ Tracks the fork rate on your server by polling the Couchbase REST API at "http:/
 - Written in pure Lua/Luvit (embedded in `boundary-meter`) therefore **no dependencies** are required.
 - Metrics are collected via HTTP requests, therefore **all OSes** should work (tested on **Debian-based Linux** distributions).
 
-#### Boundary Meter Versions V4.0 Or Greater REQUIRED
+#### Requires Boundary Meter Versions V4.0 or later
 
-To get the new meter:
+- To install new meter go to Settings->Installation or [see instructons](https://help.boundary.com/hc/en-us/sections/200634331-Installation).
+- To upgrade the meter to the latest version - [see instructons](https://help.boundary.com/hc/en-us/articles/201573102-Upgrading-the-Boundary-Meter). 
 
-    curl -fsS \
-        -d "{\"token\":\"<your API token here>\"}" \
-        -H "Content-Type: application/json" \
-        "https://meter.boundary.com/setup_meter" > setup_meter.sh
-    chmod +x setup_meter.sh
-    ./setup_meter.sh
+### Plugin Setup
 
 #### Couchbase Server
 
 - A working server
 - Configured to run on the same machine (reachable at `127.0.0.1:8091`)
 
-### Plugin Setup
-
-No special setup is required (except basic configuration of options).
-
-#### Plugin Configuration Fields
+### Plugin Configuration Fields
 
 For advanced metrics please set a longer polling interval to minimize load on the Couchbase instance (e.g. 5000ms or more).
 
-|Setting Name       |Identifier      |Type     |Description                                                                              |
-|:------------------|----------------|---------|:----------------------------------------------------------------------------------------|
-|Couchbase Host     |serverHost      |string   |The Couchbase service host for the node (default: 'localhost').                          |
-|Couchbase Port     |serverPort      |integer  |The Couchbase service port for the node (default: 8091).                                 |
-|Couchbase Password |serverPassword  |password |The administrative password to access the Couchbase server (default: '').                |
-|Poll Retry Count   |pollRetryCount  |integer  |The number of times to retry failed HTTP requests (default: 3).                          |
-|Poll Retry Delay   |pollRetryDelay  |integer  |The interval (in milliseconds) to wait before retrying a failed request (default: 100).  |
-|Poll Interval      |pollInterval    |integer  |How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).      |
-|Advanced Metrics   |advancedMetrics |boolean  |Produce more detailed metrics (more expensive to compile, default: false).               |
+|Setting Name       | Description                                                                              |
+|:------------------|:----------------------------------------------------------------------------------------|
+| Host              | Couchbase service host for the node (default: 'localhost').                          |
+| Port              | The Couchbase service port for the node (default: 8091).                                 |
+| Username          | The administrative username to access the Couchbase server |
+| Password          | The administrative password to access the Couchbase server (default: '').                |
+| Poll Interval     | How often (in milliseconds) to poll the Couchbase node for metrics.      |
+| Advanced Metrics  | Produce more detailed metrics (more expensive to compile, default: false).               |
 
 ### Metrics Collected
 
@@ -88,5 +79,8 @@ For advanced metrics please set a longer polling interval to minimize load on th
 |COUCHBASE_PAGE_FAULTS               |Number of memory page faults on this node.                                                         |
 |COUCHBASE_ACTIVE_CONNECTIONS        |Number of currently active connections established with this node.                                 |
 
-## References
+### Dashboards
+
+### References
+
 [Couchbase REST API Reference](http://docs.couchbase.com/admin/admin/rest-intro.html)

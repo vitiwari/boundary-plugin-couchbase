@@ -1,264 +1,186 @@
+-- Copyright 2015 Boundary, Inc.
 --
--- [boundary.com] Couchbase Lua Plugin
--- [author] Valeriu Paloş <me@vpalos.com>
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
 --
-
+--    http://www.apache.org/licenses/LICENSE-2.0
 --
--- Imports.
---
-local dns   = require('dns')
-local fs    = require('fs')
-local json  = require('json')
-local http  = require('http')
-local os    = require('os')
-local timer = require('timer')
-local tools = require('tools')
-local url   = require('url')
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 
---
--- Initialize.
---
-local _buckets          = {}
-local _parameters       = json.parse(fs.readFileSync('param.json')) or {}
+local framework = require('framework')
+local json = require('json')
+local dns = require('dns')
+local Plugin = framework.Plugin 
+local WebRequestDataSource = framework.WebRequestDataSource
+local PollerCollection = framework.PollerCollection
+local DataSourcePoller = framework.DataSourcePoller
+local notEmpty = framework.string.notEmpty
+local auth = framework.util.auth
+local hasAny = framework.table.hasAny
+local clone = framework.table.clone
+local table = require('table')
+local find = framework.table.find
 
-local _serverHost       = _parameters.serverHost or 'localhost'
-local _serverPort       = _parameters.serverPort or 8091
-local _serverAddress
-local _serverTarget
+local params = framework.params
+params.name = 'Boundary Plugin Couchbase'
+params.version = '2.0'
+params.tags = 'couchbase'
+params.pollInterval = notEmpty(tonumber(params.pollInterval), 1000)
+params.host = notEmpty(params.host, 'localhost')
+params.port = notEmpty(params.port, '8091')
+params.advanced_metrics = params.advanced_metrics or false
 
-local _serverUsername   = _parameters.serverUsername or 'admin'
-local _serverPassword   = _parameters.serverPassword or ''
-local _pollRetryCount   = tools.fence(tonumber(_parameters.pollRetryCount) or    3,   0, 1000)
-local _pollRetryDelay   = tools.fence(tonumber(_parameters.pollRetryDelay) or  100,   0, 1000 * 60 * 60)
-local _pollInterval     = tools.fence(tonumber(_parameters.pollInterval)   or 5000, 100, 1000 * 60 * 60 * 24)
-local _advancedMetrics  = _parameters.advancedMetrics == true
+-- 1. get /pools/nodes get the node based on the host parameter.
+-- 2. get /pools/default/buckets for a list of available buckets for advanced metrics. This can be done with a CachedWebRequestDataSource
+-- 3. get /pools/default/buckets/%s/nodes/%s/stats?zoom=minute for each bucket for advanced metrics. This can be a list of child request returned by the chain function.
 
---
--- Metrics source.
---
-local _source =
-  (type(_parameters.source) == 'string' and _parameters.source:gsub('%s+', '') ~= '' and _parameters.source) or
-   os.hostname()
+local buckets = {}
+local pending_requests = {}
+local target
+local plugin
 
---
--- Get a JSON data set from the server at the given URL (includes query string)
---
-function retrieve(location, callback)
-  local _pollRetryRemaining = _pollRetryCount
-
-  local options = url.parse('http://' .. _serverTarget .. location)
-  options.headers = {
-    ['Accept'] = 'application/json',
-    ['Authorization'] = 'Basic ' .. tools.base64(_serverUsername .. ':' .. _serverPassword)
-  }
-
-  function handler(response)
-    if (response.status_code ~= 200) then
-      return retry("Unexpected status code " .. response.status_code .. ", should be 200!")
-    end
-
-    local data = {}
-    response:on('data', function(chunk)
-      table.insert(data, chunk)
-    end)
-    response:on('end', function()
-      local success, json = pcall(json.parse, table.concat(data))
-
-      if success then
-        callback(nil, json)
-      else
-        callback("Unable to parse incoming data as a valid JSON value!")
-      end
-
-      response:destroy()
-    end)
-
-    response:once('error', retry)
-  end
-
-  function retry(result)
-    if _pollRetryRemaining == 0 then
-      return callback(result)
-    elseif _pollRetryRemaining > 0 then
-      _pollRetryRemaining = _pollRetryRemaining - 1
-    end
-    timer.setTimeout(_pollRetryDelay, perform)
-  end
-
-  function perform()
-    local request = http.request(options, handler)
-    request:once('error', retry)
-    request:done()
-  end
-
-  perform()
+local function getNode(nodes, hostname)
+  return find(function (v) return v.hostname == hostname end, nodes) 
 end
 
---
--- Schedule poll.
---
-function schedule()
-  timer.setTimeout(_pollInterval, poll)
+local function standardMetrics(cluster)
+  local result = {}
+  result['COUCHBASE_RAM_QUOTA_TOTAL'] = cluster.storageTotals.ram.quotaTotalPerNode or 0
+  result['COUCHBASE_RAM_QUOTA_USED'] = cluster.storageTotals.ram.quotaUsedPerNode or 0
+
+  local node = getNode(cluster.nodes, target)
+  if node then
+    result['COUCHBASE_CPU_USAGE_RATE'] = node.systemStats.cpu_utilization_rate or 0
+    result['COUCHBASE_RAM_SYSTEM_TOTAL'] = node.systemStats.mem_free or 0
+    result['COUCHBASE_RAM_SYSTEM_FREE'] = node.systemStats.mem_total or 0
+    result['COUCHBASE_SWAP_TOTAL'] = node.systemStats.swap_total or 0
+    result['COUCHBASE_SWAP_USED'] = node.systemStats.swap_used or 0
+    result['COUCHBASE_OPERATIONS'] = node.interestingStats.ops or 0
+    result['COUCHBASE_DOCUMENTS_COUNT'] = node.interestingStats.curr_items or 0
+    result['COUCHBASE_DOCUMENTS_SIZE'] = node.interestingStats.couch_docs_data_size or 0
+    result['COUCHBASE_DOCUMENTS_SIZE_ON_DISK'] = node.interestingStats.couch_docs_actual_disk_size or 0
+    result['COUCHBASE_VIEWS_SIZE'] = node.interestingStats.couch_views_data_size or 0
+    result['COUCHBASE_VIEWS_SIZE_ON_DISK'] = node.interestingStats.couch_views_actual_disk_size or 0
+  end
+  
+  return result
 end
 
---
--- Print a metric.
---
-function metric(stamp, id, value)
-  print(string.format('%s %s %s %d', id, value, _source, stamp))
-end
+local options = {}
+options.host = params.host
+options.port = params.port
+options.auth = auth(params.username, params.password)
+options.path = '/pools/nodes'
+options.wait_for_end = true
+local ds = WebRequestDataSource:new(options)
+ds:chain(function (context, callback, data)
+  local cluster = json.parse(data)
+  
+  local metrics = standardMetrics(cluster)
+  plugin:report(metrics)
 
---
--- Compile and print standard metrics from given data.
---
-function produceStandard(stamp, cluster, buckets)
-  metric(stamp, 'COUCHBASE_RAM_QUOTA_TOTAL',          cluster.storageTotals.ram.quotaTotalPerNode or 0)
-  metric(stamp, 'COUCHBASE_RAM_QUOTA_USED',           cluster.storageTotals.ram.quotaUsedPerNode or 0)
-
-  local selectedNode
-  for _, node in ipairs(cluster.nodes) do
-    if node.hostname == _serverTarget then
-      selectedNode = node
-      break
+  if params.advanced_metrics then
+    local data_sources = {}
+    for i, bucket in ipairs(buckets) do
+      local node = target 
+      local opts = clone(options)
+      opts.meta = bucket
+      opts.path = ('/pools/default/buckets/%s/nodes/%s/stats?zoom=minute'):format(bucket, node)
+      local child_ds = WebRequestDataSource:new(opts)
+      child_ds:propagate('error', context)
+      table.insert(data_sources, child_ds)
+      pending_requests[bucket] = true
     end
+    return data_sources
+  end
+end)
+
+-- For the standard metrics we look for the node that has the same IP and port as the specified parameters.
+-- For the advanced metrics we get a list of buckets and then agregate bucket metrics
+local stats_total_tmpl = {
+  couch_views_fragmentation = 0,
+  couch_views_fragmentation = 0,
+  couch_views_ops = 0,
+  avg_disk_commit_time = 0,
+  avg_disk_update_time = 0,
+  cas_hits = 0,
+  cas_misses = 0,
+  ep_bg_fetched = 0,
+  evictions = 0,
+  misses = 0,
+  xdc_ops = 0,
+  replication_changes_left = 0,
+  major_faults = 0,
+  minor_faults = 0,
+  page_faults = 0
+}
+
+local stats_total = clone(stats_total_tmpl)
+
+plugin = Plugin:new(params, ds)
+function plugin:onParseValues(data, extra)
+  if not extra.info then
+    return
   end
 
-  if selectedNode then
-    metric(stamp, 'COUCHBASE_CPU_USAGE_RATE',         selectedNode.systemStats.cpu_utilization_rate or 0)
-    metric(stamp, 'COUCHBASE_RAM_SYSTEM_TOTAL',       selectedNode.systemStats.mem_total or 0)
-    metric(stamp, 'COUCHBASE_RAM_SYSTEM_FREE',        selectedNode.systemStats.mem_free or 0)
-    metric(stamp, 'COUCHBASE_SWAP_TOTAL',             selectedNode.systemStats.swap_total or 0)
-    metric(stamp, 'COUCHBASE_SWAP_USED',              selectedNode.systemStats.swap_used or 0)
-    metric(stamp, 'COUCHBASE_OPERATIONS',             selectedNode.interestingStats.ops or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_COUNT',        selectedNode.interestingStats.curr_items or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_SIZE',         selectedNode.interestingStats.couch_docs_data_size or 0)
-    metric(stamp, 'COUCHBASE_DOCUMENTS_SIZE_ON_DISK', selectedNode.interestingStats.couch_docs_actual_disk_size or 0)
-    metric(stamp, 'COUCHBASE_VIEWS_SIZE',             selectedNode.interestingStats.couch_views_data_size or 0)
-    metric(stamp, 'COUCHBASE_VIEWS_SIZE_ON_DISK',     selectedNode.interestingStats.couch_views_actual_disk_size or 0)
+  local parsed = json.parse(data)
+  for k, v in pairs(stats_total) do
+    local samples = parsed.op.samples[k] or {} 
+    stats_total[k] = v + tonumber(samples[#samples]) or 0
   end
-end
 
---
--- Compile and print advanced metrics from given data.
---
-function produceAdvanced(stamp, cluster, buckets)
-  function coalesce(sample)
-    local result = 0
-    for _, bucket in pairs(buckets) do
-      local vector = bucket.op.samples[sample] or {}
-      result = result + vector[#vector] or 0
-    end
+  pending_requests[extra.info] = nil
+  if not hasAny(pending_requests) then
+    local result = {}
+    result['COUCHBASE_DOCUMENTS_FRAGMENTATION'] = stats_total.couch_views_fragmentation
+    result['COUCHBASE_VIEWS_FRAGMENTATION'] = stats_total.couch_views_fragmentation
+    result['COUCHBASE_VIEWS_OPERATIONS'] = stats_total.couch_views_ops
+    result['COUCHBASE_DISK_COMMIT_TIME'] = stats_total.avg_disk_commit_time
+    result['COUCHBASE_DISK_UPDATE_TIME'] = stats_total.avg_disk_update_time
+    result['COUCHBASE_CAS_HITS'] = stats_total.cas_hits
+    result['COUCHBASE_CAS_MISSES'] = stats_total.cas_misses
+    result['COUCHBASE_DISK_FETCHES'] = stats_total.ep_bg_fetched
+    result['COUCHBASE_EVICTIONS'] = stats_total.evictions
+    result['COUCHBASE_MISSES'] = stats_total.misses
+    result['COUCHBASE_XDCR_OPERATIONS'] = stats_total.xdc_ops
+    result['COUCHBASE_REPLICATION_CHANGES_LEFT'] = stats_total.replication_changes_left
+    result['COUCHBASE_MAJOR_FAULTS'] = stats_total.major_faults
+    result['COUCHBASE_MINOR_FAULTS'] = stats_total.minor_faults
+    result['COUCHBASE_PAGE_FAULTS'] = stats_total.page_faults
+  
+    stats_total = clone(stats_total_tmpl)
     return result
   end
-
-  metric(stamp, 'COUCHBASE_DOCUMENTS_FRAGMENTATION',  coalesce('couch_docs_fragmentation'))
-  metric(stamp, 'COUCHBASE_VIEWS_FRAGMENTATION',      coalesce('couch_views_fragmentation'))
-  metric(stamp, 'COUCHBASE_VIEWS_OPERATIONS',         coalesce('couch_views_ops'))
-  metric(stamp, 'COUCHBASE_DISK_COMMIT_TIME',         coalesce('avg_disk_commit_time'))
-  metric(stamp, 'COUCHBASE_DISK_UPDATE_TIME',         coalesce('avg_disk_update_time'))
-  metric(stamp, 'COUCHBASE_CAS_HITS',                 coalesce('cas_hits'))
-  metric(stamp, 'COUCHBASE_CAS_MISSES',               coalesce('cas_misses'))
-  metric(stamp, 'COUCHBASE_DISK_FETCHES',             coalesce('ep_bg_fetched'))
-  metric(stamp, 'COUCHBASE_EVICTIONS',                coalesce('evictions'))
-  metric(stamp, 'COUCHBASE_MISSES',                   coalesce('misses'))
-  metric(stamp, 'COUCHBASE_XDCR_OPERATIONS',          coalesce('xdc_ops'))
-  metric(stamp, 'COUCHBASE_REPLICATION_CHANGES_LEFT', coalesce('replication_changes_left'))
-  metric(stamp, 'COUCHBASE_MAJOR_FAULTS',             coalesce('major_faults'))
-  metric(stamp, 'COUCHBASE_MINOR_FAULTS',             coalesce('minor_faults'))
-  metric(stamp, 'COUCHBASE_PAGE_FAULTS',              coalesce('page_faults'))
-
-  local selectedBucket = buckets[next(buckets)]
-  local curr_connections = selectedBucket.op.samples.curr_connections
-  metric(stamp, 'COUCHBASE_ACTIVE_CONNECTIONS',       curr_connections[#curr_connections] or 0)
 end
 
---
--- Produce metrics.
---
-function poll()
-
-  local stamp   = os.time()
-  local cluster
-  local buckets = {}
-  local remain  = 1 + (_advancedMetrics and #_buckets or 0)
-  local failed  = false
-
-  function produce()
-    if remain > 0 then
+local function resolveHost(host)
+  dns.resolve(host, function (failure, addresses)
+    if failure then
+      plugin:emitEvent('critical', ('Could not resolve the %s'):format(host))
       return
     end
 
-    if not failed then
-      pcall(produceStandard, stamp, cluster, buckets)
-
-      if _advancedMetrics then
-        pcall(produceAdvanced, stamp, cluster, buckets)
-      end
-    end
-
-    schedule()
-  end
-
-  retrieve('/pools/nodes', function(failure, data)
-    if failure then
-      failed = true
-    else
-      cluster = data
-    end
-
-    remain = remain - 1
-    produce()
-  end)
-
-  if _advancedMetrics then
-    for _, bucket in ipairs(_buckets) do
-
-      retrieve(string.format('/pools/default/buckets/%s/nodes/%s/stats?zoom=minute', bucket, _serverTarget), function(failure, data)
-        if failure then
-          failed = true
-        else
-          buckets[bucket] = data
-        end
-
-        remain = remain - 1
-        produce()
-      end)
-
-    end
-  end
-
-end
-
---
--- Query Couchbase for buckets.
---
-function scan()
-  retrieve('/pools/default/buckets', function(failure, buckets)
-    if failure then
-      error("Failed to read Couchbase infrastructure: " .. tostring(failure) .. "!")
-    end
-
-    for _, bucket in ipairs(buckets) do
-      table.insert(_buckets, bucket.name)
-    end
-
-    -- Trigger repetitive collection.
-    poll()
+    target = addresses[1] .. ':' .. params.port 
+    plugin:run()
   end)
 end
 
---
--- Resolve server DNS into IP form and trigger cluster scan (which triggers polling).
---
-dns.resolve(_serverHost, function(failure, addresses)
-  if failure then
-    error(string.format("Unable to resolve server hostname '%s': %s!", _serverHost, failure))
-  end
+local function run()
+  local opts = clone(options)
+  opts.path = '/pools/default/buckets'
+  local buckets_ds = WebRequestDataSource:new(opts)
+  buckets_ds:fetch(nil, function (data) 
+    local parsed = json.parse(data)
+    for _, bucket in ipairs(parsed) do
+      table.insert(buckets, bucket.name)
+    end
+    resolveHost(params.host)
+  end)
+end
 
-  -- Compile target.
-  _serverAddress = addresses[1]
-  _serverTarget = _serverAddress .. ':' .. _serverPort
-
-  -- Trigger cluster scan.
-  scan()
-end)
+run()

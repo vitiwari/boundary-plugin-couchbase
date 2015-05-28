@@ -42,7 +42,7 @@
   "paramSchema": [
     {
       "title": "Couchbase Host",
-      "name": "serverHost",
+      "name": "host",
       "description": "The Couchbase service host (default: 'localhost').",
       "type" : "string",
       "default" : "localhost",
@@ -50,16 +50,15 @@
     },
     {
       "title": "Couchbase Port",
-      "name": "serverPort",
+      "name": "port",
       "description": "The Couchbase service port (default: 8091).",
       "type" : "integer",
       "default" : 8091,
       "required" : false
     },
-
     {
       "title": "Couchbase Username",
-      "name": "serverUsername",
+      "name": "useranme",
       "description": "The administrative username to access the Couchbase server (default: 'admin').",
       "type" : "string",
       "default" : "admin",
@@ -67,47 +66,33 @@
     },
     {
       "title": "Couchbase Password",
-      "name": "serverPassword",
+      "name": "password",
       "description": "The administrative password to access the Couchbase server (default: '').",
       "type" : "password",
       "default" : "",
       "required" : false
     },
-
     {
-      "title": "Poll Retry Count",
-      "name": "pollRetryCount",
-      "description": "The number of times to retry failed HTTP requests (default: 5, infinite: 0).",
-      "type" : "integer",
-      "default" : 5,
-      "required" : false
+      "title" : "Source",
+      "name" : "source",
+      "description" : "The Source to display in the legend for the data.  It will default to the hostname of the server",
+      "type" : "string"
     },
-    {
-      "title": "Poll Retry Delay",
-      "name": "pollRetryDelay",
-      "description": "The interval (in milliseconds) to wait before retrying a failed request (default: 3000).",
-      "type" : "integer",
-      "default" : 5,
-      "required" : false
-    },
-
     {
       "title": "Poll Interval",
       "name": "pollInterval",
-      "description": "How often (in milliseconds) to poll the Couchbase node for metrics (default: 5000).",
+      "description": "How often (in milliseconds) to poll the Couchbase node for metrics (default: 2000).",
       "type" : "integer",
-      "default" : 5000,
+      "default" : 2000,
       "required" : false
     },
-
     {
       "title": "Advanced Metrics",
-      "name": "advancedMetrics",
+      "name": "advanced_metrics",
       "description": "Produce more detailed metrics (more expensive to compile, default: true).",
       "type" : "boolean",
       "default" : true,
       "required" : false
     }
   ]
-
 }
