@@ -25,6 +25,7 @@ local hasAny = framework.table.hasAny
 local clone = framework.table.clone
 local table = require('table')
 local find = framework.table.find
+local percentage = framework.util.percentage
 
 local params = framework.params
 params.name = 'Boundary Plugin Couchbase'
@@ -55,9 +56,9 @@ local function standardMetrics(cluster)
 
   local node = getNode(cluster.nodes, target)
   if node then
-    result['COUCHBASE_CPU_USAGE_RATE'] = node.systemStats.cpu_utilization_rate or 0
-    result['COUCHBASE_RAM_SYSTEM_TOTAL'] = node.systemStats.mem_free or 0
-    result['COUCHBASE_RAM_SYSTEM_FREE'] = node.systemStats.mem_total or 0
+    result['COUCHBASE_CPU_USAGE_RATE'] = percentage(node.systemStats.cpu_utilization_rate or 0)
+    result['COUCHBASE_RAM_SYSTEM_TOTAL'] = node.systemStats.mem_total or 0
+    result['COUCHBASE_RAM_SYSTEM_FREE'] = node.systemStats.mem_free or 0
     result['COUCHBASE_SWAP_TOTAL'] = node.systemStats.swap_total or 0
     result['COUCHBASE_SWAP_USED'] = node.systemStats.swap_used or 0
     result['COUCHBASE_OPERATIONS'] = node.interestingStats.ops or 0
@@ -137,8 +138,8 @@ function plugin:onParseValues(data, extra)
   pending_requests[extra.info] = nil
   if not hasAny(pending_requests) then
     local result = {}
-    result['COUCHBASE_DOCUMENTS_FRAGMENTATION'] = stats_total.couch_views_fragmentation
-    result['COUCHBASE_VIEWS_FRAGMENTATION'] = stats_total.couch_views_fragmentation
+    result['COUCHBASE_DOCUMENTS_FRAGMENTATION'] = percentage(stats_total.couch_views_fragmentation)
+    result['COUCHBASE_VIEWS_FRAGMENTATION'] = percentage(stats_total.couch_views_fragmentation)
     result['COUCHBASE_VIEWS_OPERATIONS'] = stats_total.couch_views_ops
     result['COUCHBASE_DISK_COMMIT_TIME'] = stats_total.avg_disk_commit_time
     result['COUCHBASE_DISK_UPDATE_TIME'] = stats_total.avg_disk_update_time
