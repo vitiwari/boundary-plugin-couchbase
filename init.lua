@@ -28,9 +28,6 @@ local find = framework.table.find
 local percentage = framework.util.percentage
 
 local params = framework.params
-params.name = 'Boundary Plugin Couchbase'
-params.version = '2.0'
-params.tags = 'couchbase'
 params.pollInterval = notEmpty(tonumber(params.pollInterval), 1000)
 params.host = notEmpty(params.host, 'localhost')
 params.port = notEmpty(params.port, '8091')
