@@ -1,4 +1,7 @@
 {
+  "name" : "Boundary Couchbase Plugin",
+  "version" : "2.0",
+  "tags" : "couchbase",
   "description" : "Collects statistical metrics from Couchbase server nodes.",
   "icon" : "icon.png",
 
