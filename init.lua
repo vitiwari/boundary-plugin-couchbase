@@ -159,7 +159,7 @@ end
 local function resolveHost(host)
   dns.resolve(host, function (failure, addresses)
     if failure then
-      plugin:emitEvent('critical', ('Could not resolve the %s'):format(host))
+      plugin:emitEvent('critical', ('%s Unresolved'):format(host), host, host, ('Could not resolve the %s'):format(host))
       return
     end
 
