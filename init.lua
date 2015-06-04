@@ -26,6 +26,7 @@ local clone = framework.table.clone
 local table = require('table')
 local find = framework.table.find
 local percentage = framework.util.percentage
+local isHttpSuccess = framework.util.isHttpSuccess
 
 local params = framework.params
 params.pollInterval = notEmpty(tonumber(params.pollInterval), 1000)
@@ -173,7 +174,11 @@ local function run()
   opts.path = '/pools/default/buckets'
   local buckets_ds = WebRequestDataSource:new(opts)
   buckets_ds:propagate('error', plugin)
-  buckets_ds:fetch(nil, function (data) 
+  buckets_ds:fetch(nil, function (data, extra) 
+    if not isHttpSuccess(extra.status_code) then
+      plugin:emitEvent('error', 'Http Error', params.host, params.host, ('Http status code %s'):format(extra.status_code))
+      return
+    end
     local parsed = json.parse(data)
     for _, bucket in ipairs(parsed) do
       table.insert(buckets, bucket.name)
