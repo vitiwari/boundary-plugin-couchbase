@@ -172,6 +172,7 @@ local function run()
   local opts = clone(options)
   opts.path = '/pools/default/buckets'
   local buckets_ds = WebRequestDataSource:new(opts)
+  buckets_ds:propagate('error', plugin)
   buckets_ds:fetch(nil, function (data) 
     local parsed = json.parse(data)
     for _, bucket in ipairs(parsed) do
