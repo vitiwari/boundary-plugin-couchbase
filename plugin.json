@@ -1,8 +1,8 @@
 {
   "name" : "Boundary Couchbase Plugin",
-  "version" : "0.9.0",
+  "version" : "0.9.1",
   "meterVersionRequired" : "4.2.0-611",
-  "os" : [ "Linux", "Windows", "SmartOS", "OS X" ],
+  "unsupportedPlatforms" : [ ],
   "tags" : "couchbase",
   "description" : "Collects statistical metrics from Couchbase server nodes.",
   "icon" : "icon.png",
@@ -93,9 +93,9 @@
       "type" : "string"
     },
     {
-      "title": "Poll Interval",
+      "title": "Poll Interval (ms)",
       "name": "pollInterval",
-      "description": "How often (in milliseconds) to poll the Couchbase node for metrics (default: 2000).",
+      "description": "How often (in milliseconds) to poll the Couchbase node for metrics.",
       "type" : "integer",
       "default" : 2000,
       "required" : false
