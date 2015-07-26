@@ -28,12 +28,13 @@ For advanced metrics please set a longer polling interval to minimize load on th
 
 |Setting Name       | Description                                                                              |
 |:------------------|:----------------------------------------------------------------------------------------|
-| Host              | Couchbase service host for the node (default: 'localhost').                          |
-| Port              | The Couchbase service port for the node (default: 8091).                                 |
+| Host              | Couchbase service host for the node.                          |
+| Port              | The Couchbase service port for the node.                                 |
 | Username          | The administrative username to access the Couchbase server |
-| Password          | The administrative password to access the Couchbase server (default: '').                |
+| Password          | The administrative password to access the Couchbase server.                |
+| Advanced Metrics  | Produce more detailed metrics (more expensive to compile).               |
 | Poll Interval     | How often (in milliseconds) to poll the Couchbase node for metrics.      |
-| Advanced Metrics  | Produce more detailed metrics (more expensive to compile, default: false).               |
+| Source        | The Source to display in the legend for the data.  It will default to the hostname of the server.|
 
 ### Metrics Collected
 
