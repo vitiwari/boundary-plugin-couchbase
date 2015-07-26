@@ -57,9 +57,9 @@
     {
       "title": "Couchbase Host",
       "name": "host",
-      "description": "The Couchbase service host (default: 'localhost').",
+      "description": "The Couchbase service host.",
       "type" : "string",
-      "default" : "localhost",
+      "default" : "127.0.0.1",
       "required" : false
     },
     {
