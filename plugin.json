@@ -87,10 +87,12 @@
       "required" : false
     },
     {
-      "title" : "Source",
-      "name" : "source",
-      "description" : "The Source to display in the legend for the data.  It will default to the hostname of the server",
-      "type" : "string"
+      "title": "Advanced Metrics",
+      "name": "advanced_metrics",
+      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
     },
     {
       "title": "Poll Interval (ms)",
@@ -101,12 +103,10 @@
       "required" : false
     },
     {
-      "title": "Advanced Metrics",
-      "name": "advanced_metrics",
-      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
-      "type" : "boolean",
-      "default" : true,
-      "required" : false
+      "title" : "Source",
+      "name" : "source",
+      "description" : "The Source to display in the legend for the data.  It will default to the hostname of the server",
+      "type" : "string"
     }
   ]
 }
