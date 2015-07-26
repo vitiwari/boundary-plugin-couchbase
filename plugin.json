@@ -60,7 +60,7 @@
       "description": "The Couchbase service host.",
       "type" : "string",
       "default" : "127.0.0.1",
-      "required" : false
+      "required" : true 
     },
     {
       "title": "Couchbase Port",
@@ -68,7 +68,7 @@
       "description": "The Couchbase service port (default: 8091).",
       "type" : "integer",
       "default" : 8091,
-      "required" : false
+      "required" : true 
     },
     {
       "title": "Couchbase Username",
