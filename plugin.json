@@ -57,10 +57,10 @@
     {
       "title": "Couchbase Host",
       "name": "host",
-      "description": "The Couchbase service host (default: 'localhost').",
+      "description": "The Couchbase service host.",
       "type" : "string",
-      "default" : "localhost",
-      "required" : false
+      "default" : "127.0.0.1",
+      "required" : true 
     },
     {
       "title": "Couchbase Port",
@@ -68,7 +68,7 @@
       "description": "The Couchbase service port (default: 8091).",
       "type" : "integer",
       "default" : 8091,
-      "required" : false
+      "required" : true 
     },
     {
       "title": "Couchbase Username",
@@ -87,10 +87,12 @@
       "required" : false
     },
     {
-      "title" : "Source",
-      "name" : "source",
-      "description" : "The Source to display in the legend for the data.  It will default to the hostname of the server",
-      "type" : "string"
+      "title": "Advanced Metrics",
+      "name": "advanced_metrics",
+      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
     },
     {
       "title": "Poll Interval (ms)",
@@ -101,12 +103,10 @@
       "required" : false
     },
     {
-      "title": "Advanced Metrics",
-      "name": "advanced_metrics",
-      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
-      "type" : "boolean",
-      "default" : true,
-      "required" : false
+      "title" : "Source",
+      "name" : "source",
+      "description" : "The Source to display in the legend for the data.  It will default to the hostname of the server",
+      "type" : "string"
     }
   ]
 }
