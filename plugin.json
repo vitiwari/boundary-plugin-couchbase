@@ -72,7 +72,7 @@
     },
     {
       "title": "Couchbase Username",
-      "name": "useranme",
+      "name": "username",
       "description": "The administrative username to access the Couchbase server (default: 'admin').",
       "type" : "string",
       "default" : "admin",
