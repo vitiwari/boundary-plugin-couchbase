@@ -66,7 +66,7 @@ local function clusterNodeStatsExtractor (data, item)
     count=count+1
     local ip, port = node.hostname:match'(.-):(.*)'
     local src1=src.."_"..ip;   
-    metric('COUCHBASE_NODE_CPU_USAGE_RATE', node.systemStats.cpu_utilization_rate,nil,src1)
+    metric('COUCHBASE_NODE_CPU_USAGE_RATE', percentage(node.systemStats.cpu_utilization_rate),nil,src1)
     metric('COUCHBASE_NODE_RAM_SYSTEM_TOTAL', node.systemStats.mem_total,nil,src1)
     metric('COUCHBASE_NODE_RAM_SYSTEM_FREE', node.systemStats.mem_free,nil,src1)
     metric('COUCHBASE_NODE_SWAP_TOTAL', node.systemStats.swap_used,nil,src1)
