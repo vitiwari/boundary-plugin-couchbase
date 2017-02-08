@@ -44,7 +44,21 @@
     "COUCHBASE_BUCKET_REPL_CHANGES_LEFT"
   ],
 
-  "dashboards" : [ ],
+  "dashboards" : [
+                  {
+    	    "name" : "Couchbase Cluster",
+            "layout" : "d-w=3&d-h=2&d-pad=5&d-light=0&d-bg=000000&d-g-COUCHBASE_CLSTR_HDD_QUOTA_TOTAL=0-0-1-1&d-g-COUCHBASE_CLSTR_HDD_USED=1-0-1-1&d-g-COUCHBASE_CLSTR_RAM_QUOTA_TOTAL=0-1-1-1&d-g-COUCHBASE_CLSTR_RAM_QUOTA_USED=1-1-1-1&d-g-COUCHBASE_CLSTR_NODE_COUNT=2-0-1-1&d-g-COUCHBASE_CLSTR_BUCKET_COUNT=2-1-1-1" 
+    	},
+        {
+    	    "name" : "Couchbase Nodes",
+            "layout" :"d-w=4&d-h=2&d-pad=5&d-light=0&d-bg=000000&d-g-COUCHBASE_NODE_CPU_USAGE_RATE=0-0-1-1&d-g-COUCHBASE_NODE_OPERATIONS=3-0-1-1&d-g-COUCHBASE_NODE_RAM_SYSTEM_TOTAL=1-0-1-1&d-g-COUCHBASE_NODE_RAM_SYSTEM_FREE=2-0-1-1&d-g-COUCHBASE_NODE_DOCUMENTS_SIZE_ON_DISK=0-1-1-1&d-g-COUCHBASE_NODE_DOCUMENTS_SIZE=1-1-1-1&d-g-COUCHBASE_NODE_SWAP_TOTAL=2-1-1-1&d-g-COUCHBASE_NODE_SWAP_USED=3-1-1-1"
+	},
+	{
+    	    "name" : "Couchbase Buckets",
+	    "layout" : "d-w=5&d-h=2&d-pad=5&d-light=0&d-bg=000000&d-g-COUCHBASE_BUCKET_DISK_COMMIT_TIME=0-0-1-1&d-g-COUCHBASE_BUCKET_DISK_UPDATE_TIME=1-0-1-1&d-g-COUCHBASE_BUCKET_DISK_FETCHES=2-0-1-1&d-g-COUCHBASE_BUCKET_CAS_HITS=3-0-1-1&d-g-COUCHBASE_BUCKET_CAS_MISSES=4-0-1-1&d-g-COUCHBASE_BUCKET_DOC_FRAGMENTATION=0-1-1-1&d-g-COUCHBASE_BUCKET_MISSES=1-1-1-1&d-g-COUCHBASE_BUCKET_EVICTIONS=2-1-1-1&d-g-COUCHBASE_BUCKET_VIEWS_FRAGMENTATION=3-1-1-1&d-g-COUCHBASE_BUCKET_VIEWS_OPERATIONS=4-1-1-1"
+	}
+                  
+                  ],
   "paramSchema": [
     {
       "title": "Couchbase Host",
