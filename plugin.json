@@ -79,14 +79,6 @@
       "required" : false
     },
     {
-      "title": "Advanced Metrics",
-      "name": "advanced_metrics",
-      "description": "Produce more detailed metrics (more expensive to compile, default: true).",
-      "type" : "boolean",
-      "default" : true,
-      "required" : false
-    },
-    {
       "title": "Poll Interval (ms)",
       "name": "pollInterval",
       "description": "How often (in milliseconds) to poll the Couchbase node for metrics.",
